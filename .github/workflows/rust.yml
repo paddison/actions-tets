@@ -14,7 +14,7 @@ jobs:
     - name: Checkout Repo
       uses: actions/checkout@v3
     - name: Build Lambda
-      run: cd cloud_sine_generator; cargo lambda build;
+      run: cd cloud_sine_generator; cargo lambda build --release;
     - name: Upload Bootstrap.zip
       uses: actions/upload-artifact@v3
       with: 
