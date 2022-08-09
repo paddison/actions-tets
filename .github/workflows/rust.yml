@@ -13,4 +13,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build
-      run: echo '${{ github }}'
+      run: echo '${{ runner.os }}'
