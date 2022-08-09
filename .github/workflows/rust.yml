@@ -11,6 +11,12 @@ jobs:
     runs-on: self-hosted
     
     steps:
-    - uses: actions/checkout@v3
-    - name: Build
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+    - name: Build Lambda
       run: cd cloud_sine_generator; cargo lambda build;
+    - name: Upload Bootstrap.zip
+      uses: actions/upload-artifact@v3
+      with: 
+        name: generator-artifact
+        path: target/lambda/cloud_sine_generator/bootstrap
