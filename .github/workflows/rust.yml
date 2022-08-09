@@ -19,4 +19,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with: 
         name: generator-artifact
-        path: target/lambda/cloud_sine_generator/bootstrap
+        path: cloud_sine_generator/target/lambda/cloud_sine_generator/bootstrap
