@@ -1,63 +1,43 @@
 name: Rust
 
 on: workflow_dispatch
-
+  
 env:
-  CARGO_TERM_COLOR: always
   BIN_PATH: target/lambda
   BIN_NAME: bootstrap
 
 jobs:
+
   checkout-repository:
 
     runs-on: self-hosted
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-        
-  build-generator:
-    env:
-      DIR_NAME: cloud_sine_generator
 
-    runs-on: self-hosted
-    needs: checkout-repository
-    
-    steps:
-    - name: Build Lambda
-      run: cd $DIR_NAME; # cargo lambda build --release;
-  
-  build-main:
+  build-lambdas:
     env:
-      DIR_NAME: cloud_main_lambda
+      CLEANER: cloud_bucket_cleaner
+      MAIN: cloud_main_lambda
+      GENERATOR: cloud_generator_lambda
       
     runs-on: self-hosted
     needs: checkout-repository
     
     steps:
     - name: Build Lambda
-      run: cd $DIR_NAME; # cargo lambda build --release;
-
-  build-cleaner:
-    env:
-      DIR_NAME: cloud_bucket_cleaner
-      
-    runs-on: self-hosted
-    needs: checkout-repository
-    
-    steps:
-    - name: Build Lambda
-      run: cd $DIR_NAME; # cargo lambda build --release;
+      run: cargo lambda build --release;
 
   upload-artifacts:
     
-    needs: [build-main, build-cleaner, build-generator]
+    needs: build-lambdas
     runs-on: self-hosted
     steps:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
         name: lambda-binaries
-        path: ./*/target/lambda/*/bootstrap
+        path: $BIN_PATH/*/$BIN_NAME
   
   download-artifacts:
     runs-on: self-hosted
