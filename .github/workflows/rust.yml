@@ -4,19 +4,70 @@ on: workflow_dispatch
 
 env:
   CARGO_TERM_COLOR: always
+  BIN_PATH: $DIR_NAME/target/lambda/$DIR_NAME/bootstrap
 
 jobs:
-  build:
+  checkout-repository:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        
+  build-generator:
+    env:
+      DIR_NAME: cloud_sine_generator
 
     runs-on: self-hosted
+    needs: checkout-repository
     
     steps:
-    - name: Checkout Repo
-      uses: actions/checkout@v3
     - name: Build Lambda
-      run: cd cloud_sine_generator; cargo lambda build --release;
-    - name: Upload Bootstrap.zip
+      run: cd $DIR_NAME; cargo lambda build --release;
+    - name: Upload Bootstrap
       uses: actions/upload-artifact@v3
       with: 
         name: generator-artifact
-        path: cloud_sine_generator/target/lambda/cloud_sine_generator/bootstrap
+        path: $BIN_PATH
+  
+  build-main:
+    env:
+      DIR_NAME: cloud_main_lambda
+      
+    runs-on: self-hosted
+    needs: checkout-repository
+    
+    steps:
+    - name: Build Lambda
+      run: cd $DIR_NAME; cargo lambda build --release;
+    - name: Upload Bootstrap
+      uses: actions/upload-artifact@v3
+      with:
+        name: main-artifact
+        path: $BIN_PATH
+
+  build-cleaner:
+    env:
+      DIR_NAME: cloud_bucket_cleaner
+      
+    runs-on: self-hosted
+    needs: checkout-repository
+    
+    steps:
+    - name: Build Lambda
+      run: cd $DIR_NAME; cargo lambda build --release;
+    - name: Upload Bootstrap
+      uses: actions/upload-artifact@v3
+      with:
+        name: main-artifact
+        path: $BIN_PATH
+        
+  download-artifacts:
+    runs-on: self-hosted
+    needs: [build-main, build-cleaner, build-generator]
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v3 # not specifying which artifact downloads all artifacts
+    - name: List directory
+      run: ls -R
+      
+      
