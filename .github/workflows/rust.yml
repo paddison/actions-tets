@@ -1,6 +1,12 @@
 name: Rust
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+  push:
+    paths:
+      - '**.rs'
+      - '**.toml'
+      - '**.lock'
   
 env:
   BIN_PATH: target/lambda
@@ -12,6 +18,9 @@ jobs:
 
     runs-on: self-hosted
     steps:
+      - name: print event info
+        run: echo '${{ github.event }}, ${{ github.event.head_commit.modified }}'
+        
       - name: Checkout Repo
         uses: actions/checkout@v3
 
@@ -26,7 +35,7 @@ jobs:
     
     steps:
     - name: Build Lambda
-      run: cargo lambda build --release;
+      run: echo "henlo" #cargo lambda build --release;
 
   upload-artifacts:
     
@@ -37,7 +46,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: lambda-binaries
-        path: $BIN_PATH/*/$BIN_NAME
+        path: '$BIN_PATH/*/$BIN_NAME'
   
   download-artifacts:
     runs-on: self-hosted
