@@ -4,67 +4,62 @@ on: workflow_dispatch
 
 env:
   CARGO_TERM_COLOR: always
-  BIN_PATH: $DIR_NAME/target/lambda/$DIR_NAME/bootstrap
+  BIN_PATH: ${{ env.DIR_NAME }}/target/lambda/${{ env.DIR_NAME }}/bootstrap
 
 jobs:
   checkout-repository:
-    env:
-      DIR_NAME: test
-
     runs-on: self-hosted
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-      - name: Test Env_var
-        run: echo "$BIN_PATH"
         
-  # build-generator:
-  #   env:
-  #     DIR_NAME: cloud_sine_generator
+  build-generator:
+    env:
+      DIR_NAME: cloud_sine_generator
 
-  #   runs-on: self-hosted
-  #   needs: checkout-repository
+    runs-on: self-hosted
+    needs: checkout-repository
     
-  #   steps:
-  #   - name: Build Lambda
-  #     run: cd $DIR_NAME; cargo lambda build --release;
-  #   - name: Upload Bootstrap
-  #     uses: actions/upload-artifact@v3
-  #     with: 
-  #       name: generator-artifact
-  #       path: $BIN_PATH
+    steps:
+    - name: Build Lambda
+      run: cd $DIR_NAME; cargo lambda build --release;
+    - name: Upload Bootstrap
+      uses: actions/upload-artifact@v3
+      with: 
+        name: generator-artifact
+        path: $BIN_PATH
   
-  # build-main:
-  #   env:
-  #     DIR_NAME: cloud_main_lambda
+  build-main:
+    env:
+      DIR_NAME: cloud_main_lambda
       
-  #   runs-on: self-hosted
-  #   needs: checkout-repository
+    runs-on: self-hosted
+    needs: checkout-repository
     
-  #   steps:
-  #   - name: Build Lambda
-  #     run: cd $DIR_NAME; cargo lambda build --release;
-  #   - name: Upload Bootstrap
-  #     uses: actions/upload-artifact@v3
-  #     with:
-  #       name: main-artifact
-  #       path: $BIN_PATH
+    steps:
+    - name: Build Lambda
+      run: cd $DIR_NAME; cargo lambda build --release;
+    - name: Upload Bootstrap
+      uses: actions/upload-artifact@v3
+      with:
+        name: main-artifact
+        path: $BIN_PATH
 
-  # build-cleaner:
-  #   env:
-  #     DIR_NAME: cloud_bucket_cleaner
+  build-cleaner:
+    env:
+      DIR_NAME: cloud_bucket_cleaner
       
-  #   runs-on: self-hosted
-  #   needs: checkout-repository
+    runs-on: self-hosted
+    needs: checkout-repository
     
-  #   steps:
-  #   - name: Build Lambda
-  #     run: cd $DIR_NAME; cargo lambda build --release;
-  #   - name: Upload Bootstrap
-  #     uses: actions/upload-artifact@v3
-  #     with:
-  #       name: main-artifact
-  #       path: $BIN_PATH
+    steps:
+    - name: Build Lambda
+      run: cd $DIR_NAME; cargo lambda build --release;
+    - name: Upload Bootstrap
+      uses: actions/upload-artifact@v3
+      with:
+        name: main-artifact
+        path: $BIN_PATH
         
   # download-artifacts:
   #   runs-on: self-hosted
