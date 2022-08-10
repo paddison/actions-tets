@@ -47,11 +47,6 @@ jobs:
     steps:
     - name: Build Lambda
       run: cd $DIR_NAME; cargo lambda build --release;
-    - name: Upload Bootstrap
-      uses: actions/upload-artifact@v3
-      with:
-        name: main-artifact
-        path: $DIR_NAME/$BIN_PATH/$DIR_NAME/BIN_NAME
 
   upload-artifacts:
     
@@ -60,6 +55,8 @@ jobs:
     steps:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
+      with:
+        name: lambda-binaries
         path: **/target/lambda/**/bootstrap
   
   download-artifacts:
