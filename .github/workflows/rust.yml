@@ -24,7 +24,7 @@ jobs:
     
     steps:
     - name: Build Lambda
-      run: cd $DIR_NAME; cargo lambda build --release;
+      run: cd $DIR_NAME; # cargo lambda build --release;
   
   build-main:
     env:
@@ -35,7 +35,7 @@ jobs:
     
     steps:
     - name: Build Lambda
-      run: cd $DIR_NAME; cargo lambda build --release;
+      run: cd $DIR_NAME; # cargo lambda build --release;
 
   build-cleaner:
     env:
@@ -46,7 +46,7 @@ jobs:
     
     steps:
     - name: Build Lambda
-      run: cd $DIR_NAME; cargo lambda build --release;
+      run: cd $DIR_NAME; # cargo lambda build --release;
 
   upload-artifacts:
     
