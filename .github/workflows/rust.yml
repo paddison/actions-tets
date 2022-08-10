@@ -20,7 +20,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: print event info
-        run: echo '${{ github.event }}, ${{ github.event.commits }}, ${{ github.event.ref}}\n ${{ toJSON(github.event.commits) }}'
+        run: echo '${{ toJSON(github.event) }}'
         
       - name: Checkout Repo
         uses: actions/checkout@v3
