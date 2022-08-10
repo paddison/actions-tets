@@ -68,7 +68,7 @@ jobs:
         
   download-artifacts:
     runs-on: self-hosted
-    needs: [build-main, build-cleaner, build-generator]
+    # needs: [build-main, build-cleaner, build-generator]
     steps:
     - name: Download Artifacts
       uses: actions/download-artifact@v3 # not specifying which artifact downloads all artifacts
