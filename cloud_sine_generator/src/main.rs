@@ -23,7 +23,7 @@ struct WavSpecErr(&'static str);
 
 impl WavSpecErr {
     fn new_default() -> Self {
-        WavSpecErr("Error creating WavSpec, got invalid values/fields") 
+        WavSpecErr("Error creating WavSpec, got invalid values or fields") 
     }
 }
 
