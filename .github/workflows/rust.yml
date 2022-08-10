@@ -9,15 +9,11 @@ env:
 
 jobs:
   checkout-repository:
-    env:
-      DIR_NAME: test
 
     runs-on: self-hosted
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-      - name: test env
-        run: echo "$DIR_NAME/$BIN_PATH/$DIR_NAME/BIN_NAME"
         
   build-generator:
     env:
@@ -29,11 +25,6 @@ jobs:
     steps:
     - name: Build Lambda
       run: cd $DIR_NAME; cargo lambda build --release;
-    - name: Upload Bootstrap
-      uses: actions/upload-artifact@v3
-      with: 
-        name: generator-artifact
-        path: $DIR_NAME/$BIN_PATH/$DIR_NAME/BIN_NAME
   
   build-main:
     env:
@@ -45,11 +36,6 @@ jobs:
     steps:
     - name: Build Lambda
       run: cd $DIR_NAME; cargo lambda build --release;
-    - name: Upload Bootstrap
-      uses: actions/upload-artifact@v3
-      with:
-        name: main-artifact
-        path: $DIR_NAME/$BIN_PATH/$DIR_NAME/BIN_NAME
 
   build-cleaner:
     env:
@@ -66,10 +52,19 @@ jobs:
       with:
         name: main-artifact
         path: $DIR_NAME/$BIN_PATH/$DIR_NAME/BIN_NAME
-        
+
+  upload-artifacts:
+    
+    needs: [build-main, build-cleaner, build-generator]
+    runs-on: self-hosted
+    steps:
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+        path: **/target/lambda/**/bootstrap
+  
   download-artifacts:
     runs-on: self-hosted
-    needs: [build-main, build-cleaner, build-generator]
+    needs: upload-artifacts
     steps:
     - name: Download Artifacts
       uses: actions/download-artifact@v3 # not specifying which artifact downloads all artifacts
