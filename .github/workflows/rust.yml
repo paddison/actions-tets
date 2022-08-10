@@ -20,7 +20,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: print event info
-        run: echo '${{ github.event }}, ${{ github.event.head_commit.modified[0] }}, ${{ github.event.ref}}'
+        run: echo '${{ github.event }}, ${{ github.event.commits.id }}, ${{ github.event.ref}}'
         
       - name: Checkout Repo
         uses: actions/checkout@v3
