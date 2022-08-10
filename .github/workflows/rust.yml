@@ -57,7 +57,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: lambda-binaries
-        path: **/target/lambda/**/bootstrap
+        path: ./*/target/lambda/*/bootstrap
   
   download-artifacts:
     runs-on: self-hosted
