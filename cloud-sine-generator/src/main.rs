@@ -101,7 +101,7 @@ async fn store_in_bucket(file_path: &Path) -> Result<(), Error> {
     info!("Getting file {:?} from lambda.", file_path);
     let file = ByteStream::from_path(file_path).await?;
 
-    info!("Putting file into bucket...");
+    info!("Putting file into bucket {:?}", BUCKET_NAME);
     let _ = client
         .put_object()
         .bucket(BUCKET_NAME.unwrap_or(BUCKET_NAME_FALLBACK))
