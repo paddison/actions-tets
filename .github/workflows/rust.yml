@@ -40,8 +40,9 @@ jobs:
           cache-name: cache-rust-deps
         with:
           path: ./target
-          key: build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock')}}
+          key: build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock')}}-${{ hashFiles('**/main.rs') }}
           restore-keys: |
+            build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock' }}
             build-${{ env.cache-name }}
 
       - name: Build Lambdas
