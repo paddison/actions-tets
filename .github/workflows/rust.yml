@@ -61,9 +61,9 @@ jobs:
         with:
           name: lambda-binaries
           path: |
-            $BIN_PATH/$TF_VAR_MAIN_LAMBDA/$BIN_NAME
-            $BIN_PATH/$TF_VAR_CLEANER_LAMBDA/$BIN_NAME
-            $BIN_PATH/$TF_VAR_GENERATOR_LAMBDA/$BIN_NAME
+            ${{ env.BIN_PATH }}/${{ env.TF_VAR_MAIN_LAMBDA }}/${{ env.BIN_NAME }}
+            ${{ env.BIN_PATH }}/${{ env.TF_VAR_CLEANER_LAMBDA }}/${{ env.BIN_NAME }}
+            ${{ env.BIN_PATH }}/${{ env.TF_VAR_GENERATOR_LAMBDA }}/${{ env.BIN_NAME }}
   
   download-artifacts:
     runs-on: self-hosted
