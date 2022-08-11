@@ -31,6 +31,7 @@ jobs:
 
   cache-build-files:
     runs-on: self-hosted
+    needs: checkout-repository
 
     steps:
       - name: Look for cache
@@ -45,6 +46,7 @@ jobs:
   
   build-lambdas:
 
+    needs: cache-build-files
     runs-on: self-hosted
 
     steps:
