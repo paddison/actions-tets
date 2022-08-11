@@ -28,6 +28,20 @@ jobs:
         
       - name: Checkout Repo
         uses: actions/checkout@v3
+
+  cache-build-files:
+    runs-on: self-hosted
+
+    steps:
+      - name: Look for cache
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-rust-deps
+        with:
+          path: ./target
+          key: build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock')}}
+          restore-keys: |
+            build-${{ env.cache-name }}
   
   build-lambdas:
 
