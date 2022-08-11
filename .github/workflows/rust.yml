@@ -7,6 +7,7 @@ on:
       - '**.rs'
       - '**.toml'
       - '**.lock'
+      - '**.yml'
   
 env:
   BIN_PATH: target/lambda
@@ -19,7 +20,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: print event info
-        run: echo '${{ github.event }}, ${{ github.event.head_commit.modified }}'
+        run: echo '${{ toJSON(github.event.push) }}'
         
       - name: Checkout Repo
         uses: actions/checkout@v3
