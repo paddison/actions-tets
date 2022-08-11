@@ -16,6 +16,7 @@ env:
   TF_VAR_GENERATOR_LAMBDA: "cloud-sine-generator"
   TF_VAR_CLEANER_LAMBDA: "cloud-bucket-cleaner"
   TF_VAR_MAIN_LAMBDA: "cloud-main"
+  ARTIFACT_PATH: "lambda-binaries"
 
 jobs:
 
@@ -32,9 +33,12 @@ jobs:
   build-cache-and-lambda:
     runs-on: self-hosted
     needs: checkout-repository
+    outputs:
+      is-cache-hit: ${{ steps.cache-target.output.cache-hit }}
 
     steps:
       - name: Try Cache
+        id: cache-target
         uses: actions/cache@v3
         env:
           cache-name: cache-rust-deps
@@ -45,10 +49,16 @@ jobs:
             build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock') }}
             build-${{ env.cache-name }}
 
-      - name: Build Lambdas
+      # only rebuild if there was a cache miss
+      - if: ${{ steps.cache-target.output.cache-hit == 'false' }}
+        name: Build Lambdas
         run: cargo lambda build --release --output-format Zip
       
   upload-artifacts:
+    
+    # only upload artifacts if there was a cache miss
+    if: needs.build-cache-and-lambda.outputs.is-cache-hit == 'false' 
+    
     env:
       BIN_PATH: "target/lambda"
       BIN_NAME: "bootstrap.zip"
@@ -60,7 +70,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: lambda-binaries
+          name: ${{ env.ARTIFACT_PATH }}
           path: |
             ${{ env.BIN_PATH }}/${{ env.TF_VAR_MAIN_LAMBDA }}/${{ env.BIN_NAME }}
             ${{ env.BIN_PATH }}/${{ env.TF_VAR_CLEANER_LAMBDA }}/${{ env.BIN_NAME }}
@@ -73,4 +83,7 @@ jobs:
     - name: Download Artifacts
       uses: actions/download-artifact@v3 # not specifying which artifact downloads all artifacts
     - name: List directory
-      run: ls -R
+      run: |
+        ls ${{ env.ARTIFACT_PATH }}/${{ env.TF_VAR_MAIN_LAMBDA }}
+        ls ${{ env.ARTIFACT_PATH }}/${{ env.TF_VAR_MAIN_LAMBDA }}
+        ls ${{ env.ARTIFACT_PATH }}/${{ env.TF_VAR_MAIN_LAMBDA }}
