@@ -61,9 +61,9 @@ jobs:
         with:
           name: lambda-binaries
           path: |
-            target/lambda/cloud-main/bootstrap.zip
-            target/lambda/cloud-bucket-cleaner/bootstrap.zip
-            $BIN_PATH/cloud-sine-generator/bootstrap.zip
+            $BIN_PATH/$TF_VAR_MAIN_LAMBDA/$BIN_NAME
+            $BIN_PATH/$TF_VAR_CLEANER_LAMBDA/$BIN_NAME
+            $BIN_PATH/$TF_VAR_GENERATOR_LAMBDA/$BIN_NAME
   
   download-artifacts:
     runs-on: self-hosted
