@@ -29,12 +29,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-  cache-build-files:
+  build-cache-and-lambda:
     runs-on: self-hosted
     needs: checkout-repository
 
     steps:
-      - name: Look for cache
+      - name: Try Cache
         uses: actions/cache@v3
         env:
           cache-name: cache-rust-deps
@@ -43,16 +43,9 @@ jobs:
           key: build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock')}}
           restore-keys: |
             build-${{ env.cache-name }}
-  
-  build-lambdas:
 
-    needs: cache-build-files
-    runs-on: self-hosted
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: cargo lambda build --release
+      - name: Build Lambdas
+        run: cargo lambda build --release --output-file Zip
       
   upload-artifacts:
     env:
