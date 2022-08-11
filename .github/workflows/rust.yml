@@ -52,15 +52,18 @@ jobs:
       BIN_PATH: "target/lambda"
       BIN_NAME: "bootstrap.zip"
       
-    needs: build-lambdas
+    needs: build-cache-and-lambda
     runs-on: self-hosted
     
     steps:
-    - name: Zip Bootstrap Binaries
-      run: |
-        zip $BIN_PATH/cloud-main/bootstrap.zip target/lambda/cloud-main/bootstrap
-        zip target/lambda/cloud-bucket-cleaner/bootstrap.zip target/lambda/cloud-bucket-cleaner/bootstrap
-        zip target/lambda/cloud-sine-generator/bootstrap.zip target/lambda/cloud-sine-generator/bootstrap
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lambda-binaries
+          path: |
+            target/lambda/cloud-main/bootstrap.zip
+            target/lambda/cloud-bucket-cleaner/bootstrap.zip
+            $BIN_PATH/cloud-sine-generator/bootstrap.zip
   
   download-artifacts:
     runs-on: self-hosted
