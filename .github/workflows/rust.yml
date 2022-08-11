@@ -45,7 +45,7 @@ jobs:
             build-${{ env.cache-name }}
 
       - name: Build Lambdas
-        run: cargo lambda build --release --output-file Zip
+        run: cargo lambda build --release --output-format Zip
       
   upload-artifacts:
     env:
